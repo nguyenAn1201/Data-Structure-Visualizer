@@ -58,11 +58,17 @@ export class LinkedList {
     }
 
     delete(value: number): void {
+        let currentNode = this._root!;
+
         if (this._root === null) {
            throw new Error("Linked List is Empty!");
         }
 
-        let currentNode = this._root;
+        if (currentNode.value === value && currentNode.nextNode === null) {
+            this._root = null;
+        }
+
+
         while(currentNode.nextNode !== null) {
             if (currentNode.nextNode?.value === value) {
                 currentNode.nextNode = currentNode.nextNode.nextNode;

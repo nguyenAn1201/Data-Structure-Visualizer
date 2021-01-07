@@ -1,9 +1,7 @@
 import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
 import { createMuiTheme, createStyles, makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles';
 import React, { useState } from 'react';
-// import './App.css';
-import MenuIcon from '@material-ui/icons/Menu';
-import { LinkedListNode } from './Components/LinkedListNode';
+import { LinkedListComponent } from './Components/LinkedListComponent';
 
 const theme = createMuiTheme({
   palette: {
@@ -22,19 +20,6 @@ const theme = createMuiTheme({
   },
 });
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-  }),
-);
 
 export const App = () => {
   const classes = useStyles();
@@ -44,16 +29,31 @@ export const App = () => {
       <div className="App">
       <AppBar position='static'>
         <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-          <MenuIcon />
-        </IconButton>
+        <Typography variant="h6" className={classes.title}>
+          Data Structure Visualizer
+        </Typography>
         </Toolbar>
       </AppBar>
 
-      <LinkedListNode value={1} nextPref={2}/>
+      <LinkedListComponent />
     </div>
     </ThemeProvider>
   );
 }
 
 export default App;
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    title: {
+      textAlign: "center",
+      flexGrow: 1,
+    },
+  }),
+);
