@@ -1,4 +1,3 @@
-import { ErrorSharp } from "@material-ui/icons";
 import { LinkedList } from "./LinkedList"
 import { LinkedListNode } from "./LinkedListNode";
 
@@ -6,23 +5,23 @@ describe("Linked List Tests", () => {
     test("insertToEnd inserts new node to linked list", () => {
         const testLinkedList: LinkedList = new LinkedList();
         testLinkedList.insertToEnd(1);
-        expect(testLinkedList.root.value).toBe(1);
-        expect(testLinkedList.root.nextNode).toBeNull;
+        expect(testLinkedList.head.value).toBe(1);
+        expect(testLinkedList.head.nextNode).toBeNull();
 
         const expectedSecondNode: LinkedListNode = new LinkedListNode(2);
         testLinkedList.insertToEnd(2);
 
-        expect(testLinkedList.root.nextNode!).toMatchObject(expectedSecondNode);
+        expect(testLinkedList.head.nextNode!).toMatchObject(expectedSecondNode);
     })
 
     test("insertToStart inserts new node to beginning of linked list", () => {
         const testLinkedList: LinkedList = new LinkedList();
         testLinkedList.insertToEnd(1);
 
-        const expectedNode: LinkedListNode = new LinkedListNode(2, testLinkedList.root);
+        const expectedNode: LinkedListNode = new LinkedListNode(2, testLinkedList.head);
         testLinkedList.insertToStart(2);
 
-        expect(testLinkedList.root).toMatchObject(expectedNode)
+        expect(testLinkedList.head).toMatchObject(expectedNode)
     })
 
     test("insertAfterNode inserts new node after a certain node", () => {
@@ -30,10 +29,10 @@ describe("Linked List Tests", () => {
         testLinkedList.insertToEnd(1);
         testLinkedList.insertToEnd(2);
 
-        const expectedNode: LinkedListNode = new LinkedListNode(3, testLinkedList.root.nextNode);
-        testLinkedList.insertAfterNode(3, testLinkedList.root);
+        const expectedNode: LinkedListNode = new LinkedListNode(3, testLinkedList.head.nextNode);
+        testLinkedList.insertAfterNode(3, testLinkedList.head);
 
-        expect(testLinkedList.root.nextNode).toMatchObject(expectedNode)
+        expect(testLinkedList.head.nextNode).toMatchObject(expectedNode)
     })
 
     test("find return node base on value", () => {
@@ -57,14 +56,28 @@ describe("Linked List Tests", () => {
         testLinkedList.insertToEnd(3);
 
         testLinkedList.delete(2);
+        expect(testLinkedList.head.value).toEqual(1);
+        expect(testLinkedList.head.nextNode?.value).toEqual(3);
 
-        expect(testLinkedList.root.value).toEqual(1);
-        expect(testLinkedList.root.nextNode?.value).toEqual(3);
+        // delete head node
+        testLinkedList.delete(1);
+        expect(testLinkedList.head).toMatchObject({value: 3, nextNode: null});
+
+        // delete last node within the linked list
+        testLinkedList.delete(3);
+        expect(testLinkedList.head).toEqual(null);
     })
 
     test("delete empty Linked List throw error", () => {
         const emptyLinkedList = new LinkedList();
 
         expect(() => emptyLinkedList.delete(1)).toThrowError("Linked List is Empty!")
+    })
+
+    test("delete non-existing node throw error", () => {
+        const testLinkedList: LinkedList = new LinkedList();
+        testLinkedList.insertToEnd(1);
+
+        expect(() => testLinkedList.delete(2)).toThrowError('Cannot delete non-existing node with value 2!');
     })
 })

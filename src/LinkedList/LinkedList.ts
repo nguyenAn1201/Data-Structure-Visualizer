@@ -1,29 +1,29 @@
 import { LinkedListNode } from "./LinkedListNode";
 
 export class LinkedList {
-    private _root: LinkedListNode | null;
+    private _head: LinkedListNode | null;
 
     constructor() {
-        this._root =  null;
+        this._head =  null;
     }
 
-    get root() {
-        return this._root!;
+    get head() {
+        return this._head!;
     }
 
-    set root(node: LinkedListNode) {
-        this._root = node;
+    set head(node: LinkedListNode) {
+        this._head = node;
     }
 
     // O(1)
     insertToEnd(value: number): void {
         const newNode: LinkedListNode = new LinkedListNode(value);
-        if (this._root === null) {
-            this._root = newNode;
+        if (this._head === null) {
+            this._head = newNode;
             return;
         }
 
-        let currentNode = this.root;
+        let currentNode = this.head;
         while (currentNode.nextNode !== null) {
             currentNode = currentNode.nextNode;
         }
@@ -34,22 +34,22 @@ export class LinkedList {
     // O(1)
     insertToStart(value: number): void {
         const newNode: LinkedListNode = new LinkedListNode(value);
-        if (this._root === null) {
-            this._root = newNode;
+        if (this._head === null) {
+            this._head = newNode;
             return;
         }
 
-        const tempNode = this._root;
+        const currentNode = this._head;
 
-        this._root = newNode;
-        this._root.nextNode = tempNode;
+        this._head = newNode;
+        this._head.nextNode = currentNode;
    }
 
    // O(1) for insertion. O(n) for node searching
     insertAfterNode(value: number, previousNode: LinkedListNode): void {
         const newNode: LinkedListNode = new LinkedListNode(value);
-        if (this._root === null || previousNode === null) {
-            this._root = newNode;
+        if (this._head === null || previousNode === null) {
+            this._head = newNode;
             return
         }
 
@@ -58,32 +58,39 @@ export class LinkedList {
     }
 
     delete(value: number): void {
-        let currentNode = this._root!;
-
-        if (this._root === null) {
-           throw new Error("Linked List is Empty!");
-        }
-
-        if (currentNode.value === value && currentNode.nextNode === null) {
-            this._root = null;
-        }
-
-
-        while(currentNode.nextNode !== null) {
-            if (currentNode.nextNode?.value === value) {
-                currentNode.nextNode = currentNode.nextNode.nextNode;
-            } else {
-                currentNode = currentNode.nextNode;
-            }
-        }
-    }
-
-    find(value: number): LinkedListNode | null {
-        if (this._root === null) {
+        if (this._head === null) {
             throw new Error("Linked List is Empty!")
         }
 
-        let currentNode = this._root;
+        let currentNode: LinkedListNode | null = this._head;
+        let prevNode: LinkedListNode | null = null;
+
+        if (this._head?.value === value && currentNode?.nextNode === null) {
+            this._head = null;
+            return
+        }
+
+        if (currentNode!.value === value && currentNode !== null) {
+            this._head = currentNode!.nextNode;
+            return
+        }
+
+        while (currentNode !== null && currentNode.value !== value) {
+            prevNode = currentNode;
+            currentNode = currentNode.nextNode;
+        }
+
+        if (currentNode === null) throw new Error(`Cannot delete non-existing node with value ${value}!`)
+
+        prevNode!.nextNode = currentNode!.nextNode
+    }
+
+    find(value: number): LinkedListNode | null {
+        if (this._head === null) {
+            throw new Error("Linked List is Empty!")
+        }
+
+        let currentNode = this._head;
 
         while(currentNode.value !== value) {
             if (currentNode.nextNode !== null) {

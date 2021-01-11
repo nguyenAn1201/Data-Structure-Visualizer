@@ -1,15 +1,17 @@
-import { Box, Button, createStyles, makeStyles, TextField, Theme } from "@material-ui/core"
+import { Box, Button, createStyles, makeStyles, Snackbar, TextField, Theme } from "@material-ui/core"
+import MuiAlert from '@material-ui/lab/Alert';
 import React from "react"
 import { LinkedList } from "../LinkedList/LinkedList"
 import { LinkedListNode } from "../LinkedList/LinkedListNode";
 import { LinkedListNodeComponent } from "./LinkedListNodeComponent";
 
-
-
 export const LinkedListComponent: React.FC = () => {
     const [nodes, setNode] = React.useState<LinkedListNode[]>([]);
     const [linkedList, setLinkedList] = React.useState<LinkedList>(new LinkedList());
     const [nodeValue, setNodeValue] = React.useState<string>("");
+
+    const valid = {isError: false, errorMessage: ""};
+    const [error, setError] = React.useState<{isError: boolean, errorMessage: string}>(valid);
 
     const handleFieldChange = (value: string) => {
         setNodeValue(value);
@@ -30,16 +32,19 @@ export const LinkedListComponent: React.FC = () => {
     }
 
     const handleDelete = () => {
-        linkedList.delete(Number(nodeValue));
-
-        setLinkedList(linkedList);
-        setNode(convertLinkedListToArray());
+        try {
+            linkedList.delete(Number(nodeValue));
+            setLinkedList(linkedList);
+            setNode(convertLinkedListToArray());
+        } catch(e) {
+            setError({isError: true, errorMessage: e.toString()});
+        }
     }
 
     const convertLinkedListToArray = (): LinkedListNode[] => {
         const arr: LinkedListNode[] = [];
 
-        let currentNode = linkedList.root;
+        let currentNode = linkedList.head;
         while (currentNode !== null) {
             arr.push(currentNode);
             currentNode = currentNode.nextNode!;
@@ -59,12 +64,16 @@ export const LinkedListComponent: React.FC = () => {
         </form>
         <Box m={2} className={classes.container}>
             {nodes.map((node, index) => {
-                <div id={`${index}`}>
-                    return <LinkedListNodeComponent value={node.value} />
+                return <div id={`${index}`}>
+                    <LinkedListNodeComponent value={node.value} />
                 </div>
-
             })}
         </Box>
+        <Snackbar open={error.isError} autoHideDuration={5000} onClose={() => setError(valid)}>
+            <MuiAlert elevation={6} variant="filled" severity="error">
+                {error.errorMessage}
+            </MuiAlert>
+        </Snackbar>
     </React.Fragment>
 }
 
