@@ -1,9 +1,20 @@
-import { Box, Button, createStyles, makeStyles, Snackbar, TextField, Theme } from "@material-ui/core"
+import { Box, Button, createStyles, makeStyles, Snackbar, TextField, Theme, Typography } from "@material-ui/core"
 import MuiAlert from '@material-ui/lab/Alert';
 import React from "react"
 import { LinkedList } from "../LinkedList/LinkedList"
 import { LinkedListNode } from "../LinkedList/LinkedListNode";
 import { LinkedListNodeComponent } from "./LinkedListNodeComponent";
+
+const ARROW_SVG = <svg width="100" height="70">
+        <defs>
+            <marker id="arrowhead" markerWidth="4" markerHeight="7"
+            refX="0" refY="3.5" orient="auto">
+            <polygon points="0 0, 3 3.5, 0 7" />
+            </marker>
+        </defs>
+        <line x1="0" y1="50" x2="92" y2="50" stroke="#000"
+            strokeWidth="2" markerEnd="url(#arrowhead)" />
+    </svg>
 
 export const LinkedListComponent: React.FC = () => {
     const [nodes, setNode] = React.useState<LinkedListNode[]>([]);
@@ -52,6 +63,14 @@ export const LinkedListComponent: React.FC = () => {
         return arr;
     }
 
+    const renderArrowSvg = (index: number) => {
+        if (index !== 0) {
+            return (
+                ARROW_SVG
+            )
+        }
+    }
+
     const classes = useStyles();
     return <React.Fragment>
         <form className={classes.formContainer}>
@@ -64,9 +83,13 @@ export const LinkedListComponent: React.FC = () => {
         </form>
         <Box m={2} className={classes.container}>
             {nodes.map((node, index) => {
-                return <div id={`${index}`}>
-                    <LinkedListNodeComponent value={node.value} />
-                </div>
+                return <React.Fragment key={index}>
+                    {renderArrowSvg(index)}
+                    {index === 0 ? <Typography variant="h6" style={{alignSelf: "center"}}> HEAD </Typography> : ""}
+                    <Box m={2}>
+                        <LinkedListNodeComponent value={node.value} />
+                    </Box>
+                </React.Fragment>
             })}
         </Box>
         <Snackbar open={error.isError} autoHideDuration={5000} onClose={() => setError(valid)}>
@@ -79,12 +102,14 @@ export const LinkedListComponent: React.FC = () => {
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        container: {
-            display: "flex"
-        },
         formContainer: {
             display: "flex"
         },
+        container: {
+            display: "flex",
+            flexFlow: "wrap"
+        },
+
         button: {
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),

@@ -1,6 +1,6 @@
-import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { createMuiTheme, createStyles, makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles';
-import React, { useState } from 'react';
+import React from 'react';
 import { LinkedListComponent } from './Components/LinkedListComponent';
 
 const theme = createMuiTheme({
